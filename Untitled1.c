@@ -2,6 +2,10 @@
 #include <graphics/gfx.h>
 #include <intuition/intuition.h>
 
+#define PORT 2
+
+short *joy=0xdff008+2*PORT;
+char*cia=0xbfe001;
 struct GfxBase *GfxBase;
 struct IntuitionBase *IntuitionBase;
 
@@ -42,13 +46,30 @@ rp=&(scr->RastPort);
 rp1=&(scr->RastPort);
   Move(rp1,100,100);
   Text(rp1,"0",1);
-  Move(rp1,100,100);
-  Text(rp1,"2",1);
-  char quit=getchar();
-  if(quit="q"){
+    while(1) {
+    if(*joy&2){
+        Move(rp1,100,100);
+        Text(rp1,"SAG   ",6);}
+    if(*joy&512){
+         Move(rp1,100,100);
+         Text(rp1,"SOL   ",6);}
+    if((*joy>>1^*joy)&1){
+         Move(rp1,100,100);
+         Text(rp1,"ASAGI ",6);}
+    if((*joy>>1^*joy)&256){
+         Move(rp1,100,100);
+         Text(rp1,"YUKARI",6);}
+    printf("\n");
+
+  //Move(rp1,100,100);
+  //Text(rp1,"2",1);
+
+  if(!(*cia&64*PORT)){
   // Delay(500);
   CloseScreen(scr);
   CloseLibrary(GfxBase);
   CloseLibrary(IntuitionBase);
   return(0);
-}}
+  break;
+}}  }
+
